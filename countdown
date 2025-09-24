@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Countdown Embed</title>
+<style>
+  :root{--overlay-width:260px;}
+  html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;}
+  .wrap{position:relative; max-width:900px; margin:0 auto;}
+  .wrap img{display:block; width:100%; height:auto; border-radius:10px;}
+  .overlay{
+    position:absolute;
+    top:60%;              /* slightly below center */
+    left:15%;             /* left side */
+    transform:translateY(-50%); /* center vertically relative to top:60% */
+    width:var(--overlay-width);
+    max-width:40%;
+    text-align:left;
+    pointer-events:none;   /* let clicks pass through to image (remove if you want clicks) */
+    z-index:10;
+  }
+
+  /* countdown box - transparent background (no box) */
+  .countdown { display:flex; gap:8px; align-items:center; justify-content:flex-start; }
+
+  .unit{ display:flex; flex-direction:column; align-items:center; min-width:48px; }
+  .value{
+    font-size:28px;
+    font-weight:800;
+    line-height:1;
+    color:#ffffff;               /* white digits */
+    text-shadow: 0 2px 6px rgba(0,0,0,0.7); /* makes text readable on photos */
+  }
+  .label{
+    font-size:11px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    margin-top:4px;
+    color: rgba(255,255,255,0.95);
+    text-shadow:0 1px 3px rgba(0,0,0,0.6);
+  }
+
+  /* responsiveness */
+  @media (max-width:520px){
+    :root{--overlay-width:42vw;}
+    .value{font-size:20px;}
+    .label{font-size:10px;}
+  }
+</style>
+</head>
+<body>
+  <div class="wrap" role="region" aria-label="Countdown on photo">
+    <!-- CHANGE: the image below uses your Drive file (must be public - see instructions). -->
+    <img src="https://drive.google.com/uc?export=view&id=1G7YLy6QMqs_-h-16QGg_RsEOZYM7SW2B" alt="Background photo">
+    <div class="overlay" aria-hidden="false">
+      <div id="countdown" class="countdown" aria-live="polite">
+        <div class="unit"><div class="value" id="days">0</div><div class="label">Days</div></div>
+        <div class="unit"><div class="value" id="hours">0</div><div class="label">Hours</div></div>
+        <div class="unit"><div class="value" id="minutes">0</div><div class="label">Minutes</div></div>
+        <div class="unit"><div class="value" id="seconds">0</div><div class="label">Seconds</div></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+/*
+  Countdown target (local time):
+  - Year, MonthIndex (0 = Jan, 9 = Oct), Day, Hour, Minute, Second
+  Change the numbers below if you want a different date/time.
+*/
+const target = new Date(2025, 9, 24, 0, 0, 0); // Oct 24, 2025 00:00 local time
+
+function pad(n){ return String(n).padStart(2,'0'); }
+
+function update(){
+  const now = new Date();
+  let diff = target - now;
+  if (diff <= 0){
+    // event reached
+    document.getElementById('days').textContent = '0';
+    document.getElementById('hours').textContent = '00';
+    document.getElementById('minutes').textContent = '00';
+    document.getElementById('seconds').textContent = '00';
+    clearInterval(timer);
+    return;
+  }
+  const days = Math.floor(diff / (1000*60*60*24));
+  diff -= days * (1000*60*60*24);
+  const hours = Math.floor(diff / (1000*60*60));
+  diff -= hours * (1000*60*60);
+  const minutes = Math.floor(diff / (1000*60));
+  diff -= minutes * (1000*60);
+  const seconds = Math.floor(diff / 1000);
+
+  document.getElementById('days').textContent = days;
+  document.getElementById('hours').textContent = pad(hours);
+  document.getElementById('minutes').textContent = pad(minutes);
+  document.getElementById('seconds').textContent = pad(seconds);
+}
+
+update();
+const timer = setInterval(update, 1000);
+</script>
+</body>
+</html>
