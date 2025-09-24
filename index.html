@@ -29,13 +29,26 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%); /* perfectly centered */
-      font-size: 6%; /* scales with image */
-      color: white;
+      transform: translate(-50%, -50%);
+      display: flex;
+      gap: 4vw; /* spacing between each block */
       font-family: Arial, sans-serif;
       text-align: center;
+      color: white;
       text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
-      white-space: nowrap;
+    }
+    .countdown div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .countdown .number {
+      font-size: 5vw; /* big numbers */
+      font-weight: bold;
+    }
+    .countdown .label {
+      font-size: 2vw; /* smaller labels */
+      margin-top: 0.5vw;
     }
   </style>
 </head>
@@ -53,7 +66,7 @@
       const distance = weddingDate - now;
 
       if (distance <= 0) {
-        document.getElementById("countdown").innerHTML = "It's Wedding Time!";
+        document.getElementById("countdown").innerHTML = "<div><span class='number'>It's</span><span class='label'>Wedding Time!</span></div>";
         return;
       }
 
@@ -62,8 +75,12 @@
       const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-      document.getElementById("countdown").innerHTML =
-        days + "d " + hours + "h " + minutes + "m " + seconds + "s";
+      document.getElementById("countdown").innerHTML = `
+        <div><span class="number">${days}</span><span class="label">Days</span></div>
+        <div><span class="number">${hours}</span><span class="label">Hours</span></div>
+        <div><span class="number">${minutes}</span><span class="label">Mins</span></div>
+        <div><span class="number">${seconds}</span><span class="label">Secs</span></div>
+      `;
     }
 
     setInterval(updateCountdown, 1000);
