@@ -1,90 +1,72 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Wedding Countdown</title>
   <style>
-    body {
+    body, html {
       margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
       display: flex;
       justify-content: center;
-      background: #000;
+      align-items: center;
+      background: black;
     }
-    .wrap {
+    .container {
       position: relative;
-      max-width: 900px;
       width: 100%;
+      max-width: 1000px;
     }
-    .wrap img {
+    .container img {
       width: 100%;
+      height: auto;
       display: block;
     }
-    .overlay {
-      position: absolute;
-      top: 60%;
-      left: 23%;
-      transform: translate(-50%, -50%);
-      font-family: "Segoe UI", Roboto, Arial, sans-serif;
-      text-align: center;
-      color: #fff;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.6);
-    }
     .countdown {
-      display: flex;
-      gap: 14px;
-    }
-    .unit {
-      text-align: center;
-    }
-    .value {
-      font-size: 30px;
-      font-weight: bold;
-    }
-    .label {
-      font-size: 8px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      position: absolute;
+      left: 10%;
+      top: 60%;
+      transform: translateY(-50%);
+      font-size: 3vw; /* scales with width of viewport */
+      color: white;
+      font-family: Arial, sans-serif;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
+      white-space: nowrap;
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <img src="https://raw.githubusercontent.com/nyekshii/countdown/main/CD.png" alt="Background"> 
-    <div class="overlay">
-      <div class="countdown">
-        <div class="unit"><div class="value" id="days">0</div><div class="label">Days</div></div>
-        <div class="unit"><div class="value" id="hours">00</div><div class="label">Hours</div></div>
-        <div class="unit"><div class="value" id="minutes">00</div><div class="label">Minutes</div></div>
-        <div class="unit"><div class="value" id="seconds">00</div><div class="label">Seconds</div></div>
-      </div>
-    </div>
+  <div class="container">
+    <img src="https://raw.githubusercontent.com/nyekshii/countdown/main/CD.png" alt="Background">
+    <div class="countdown" id="countdown"></div>
   </div>
 
-<script>
-  // Wedding: Oct 24, 2025 at 2:00 PM local time
-  const target = new Date("2025-10-24T14:00:00");
-  
-  function pad(n){ return String(n).padStart(2, '0'); }
-  
-  function updateCountdown(){
-    const now = new Date();
-    let diff = target - now;
-    if(diff < 0) diff = 0;
-  
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-    const minutes = Math.floor((diff / (1000 * 60)) % 60);
-    const seconds = Math.floor((diff / 1000) % 60);
-  
-    document.getElementById('days').textContent = days;
-    document.getElementById('hours').textContent = pad(hours);
-    document.getElementById('minutes').textContent = pad(minutes);
-    document.getElementById('seconds').textContent = pad(seconds);
-  }
-  
-  updateCountdown();
-  setInterval(updateCountdown, 1000);
-</script>
+  <script>
+    const weddingDate = new Date("October 24, 2025 14:00:00").getTime();
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = weddingDate - now;
+
+      if (distance <= 0) {
+        document.getElementById("countdown").innerHTML = "It's Wedding Time!";
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      document.getElementById("countdown").innerHTML =
+        days + "d " + hours + "h " + minutes + "m " + seconds + "s";
+    }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+  </script>
 </body>
 </html>
